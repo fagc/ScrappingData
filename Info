@@ -4,7 +4,7 @@ Install the add-on through google sheets add-ins store.
 
 It works by using the following syntax:
 
-=IMPORTFROMWEB(urls, xpaths/CSS)
+=IMPORTFROMWEB(URL, XPATH, OptionalParameter)
 
 Because in order to import the information we need the URL and Xpath, a way to automize a google search perphaps would be:
 
@@ -13,8 +13,61 @@ URL:
 Concatinating the google standard URL with the desired keywords.
 We do this by using:
 
-=CONCATENATE(A1,B1)
+=ARRAYFORMULA()
 
-A1 being "https://www.google.com/
+for our cell 
+Google uses 3 parameters: 
 
+q=keyword+key, indicating the request
+hl=fr, indicating the language of the results
+num=100, the number of results to be returned. By default the value is 10. Using the number 1 provides the
+"cleanest" result.
+
+So for example
+https://www.google.com/search?q=delve+everything&hl=en&num=100
+
+=ARRAYFORMULA(“https://www.google.com/search?q=”&SUBSTITUTE(A1,” “,”+”)&”&hl=en&num=100″)
+And we good our link by putting our key words on A1, it can be more or less, but this is the format
+
+once we have to URL in a cell, we can put it as our first parameter on IMPORTFROMWEB()
+
+Now we just need the second (which part of the website do we want?)
+
+XPATH
+
+Then for our XPATH CELL
+
+XPath is a language for describing an element of an XML script. And the good news is that, HTML being derived from XML, XPaths also apply to our beloved web pages.
+A simple example: //h1 indicates all the titles of the page, the double slash indicating that the path is relative, so not necessarily a direct child of the document root.
+In our case, the XPath will be a little more complex:
+
+//div[@class="g"] indicates all the wrapper elements for each result. That is, all “div” of class “g”
+And by adding //h3, we grab the title of each container
+
+So back to our IMPORTFROMWEB function in simple words
+
+=IMPORTFROMWEB(LINK, part of the website, optional parameter)
+Because all the parts of the websie are the same base (//div[@class="g"]) we can use it as our optional common paramenter for our XPATH
+or "part of the website"
+
+So a great example would be:
+A1: KEYWORD (whatever you want to lookup)
+B1: =ARRAYFORMULA(“https://www.google.com/search?q=”&SUBSTITUTE(A1,” “,”+”)&”&hl=en&num=100″)
+A2: baseSelector
+B2: //div[@class="g"]
+A3: //h3
+B3: //h3/../@href
+C3: //span[@class="st"]
+
+A6: =IMPORTFROMWEB(A1, A3:C3, A2:B2)
+
+TITLE: A3 code
+LINK SOURCE: B3 code
+DESCRIPTION: C3 code
+
+To help you write your XPaths, install XPath Helper for Chrome
+(it's a extension to see what you are grabbing from a website)
+
+
+If you see #PENDING_REQUESTS, open the add-on sidebar through the menu: Add-ons > IMPORTFROMWEB > Open sidebar, then push the “Actions” button at the bottom and finally click on “Refresh pending requests”
 
