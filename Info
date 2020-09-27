@@ -1,0 +1,20 @@
+Import from Web add-on
+
+Install the add-on through google sheets add-ins store.
+
+It works by using the following syntax:
+
+=IMPORTFROMWEB(urls, xpaths/CSS)
+
+Because in order to import the information we need the URL and Xpath, a way to automize a google search perphaps would be:
+
+URL:
+
+Concatinating the google standard URL with the desired keywords.
+We do this by using:
+
+=CONCATENATE(A1,B1)
+
+A1 being "https://www.google.com/
+
+
